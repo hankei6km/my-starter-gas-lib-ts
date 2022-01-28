@@ -13,7 +13,14 @@ jobs:
         id: get
         run: >-
           echo "::set-output name=labels::$(
-          gh api graphql --jq .data.repository.release.descriptionHTML -F owner='${{ github.repository_owner }}' -F name="$(basename '${{ github.event.repository }}')" -F tag='${{ github.event.release.tag_name }}' -f query=' { repository(owner:$owner, name:$name) { release(tagName:$tag){ descriptionHTML } } }' 
+          gh api graphql --jq .data.repository.release.descriptionHTML -F owner='${{ github.repository_owner }}' -F name="$(basename '${{ github.event.repository }}')" -F tag='${{ github.event.release.tag_name }}' -f query='
+          query ($owner: String!, $name: String!, $tag_name: String!) {
+            repository(owner:$owner, name:$name) {
+              release(tagName:$tag_name){
+                descriptionHTML
+              }
+            }
+          }' 
           | npx --package=rehype-cli rehype -S --tree-out
           | jq -r 'map(..) | .[] | select(type=="object") | select(.tagName=="a") | .properties.href | select(contains("/pull/")) | split("/") | .[-1] '
           | sort | uniq

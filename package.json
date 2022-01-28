@@ -20,7 +20,10 @@
     "markdown",
     "html"
   ],
-  "main": "index.js",
+  "files": [
+    "index.d.ts"
+  ],
+  "main": "",
   "type": "module",
   "types": "index.d.ts",
   "scripts": {

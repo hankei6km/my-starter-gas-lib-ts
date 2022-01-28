@@ -1,0 +1,92 @@
+name: Node.js Package(npmjs)
+on:
+  release:
+    types:
+      - published
+jobs:
+  labels_from_rel_note:
+    runs-on: ubuntu-latest
+    outputs:
+      labels: ${{ steps.get.outputs.labels }}
+    steps:
+      - name: Get Labels from release note
+        id: get
+        run: >-
+          echo "::set-output name=labels::$(
+          gh api graphql --jq .data.repository.release.descriptionHTML -F owner='${{ github.repository_owner }}' -F name="$(basename '${{ github.event.repository }}')" -F tag='${{ github.event.release.tag_name }}' -f query=' { repository(owner:$owner, name:$name) { release(tagName:$tag){ descriptionHTML } } }' 
+          | npx --package=rehype-cli rehype -S --tree-out
+          | jq -r 'map(..) | .[] | select(type=="object") | select(.tagName=="a") | .properties.href | select(contains("/pull/")) | split("/") | .[-1] '
+          | sort | uniq
+          | while read -r PR ;
+            do gh api "repos/${{ github.repository_owner }}/"$(basename '${{ github.event.repository }}')"/pulls/${PR}" --jq .labels[].name ;
+          done | sort | uniq
+          )"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  print_labels:
+    needs: labels_from_rel_note
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ needs.labels_from_rel_note.outputs.labels }}"
+
+  publish_types_pkg:
+    needs: labels_from_rel_note
+    # Release node に Types Changes 含むときだけ実行.
+    if: >-
+      ${{ github.event.release.prerelease ==  false }} &&
+      contains(${{ github.event.release.body, 'Types Changes' }})
+    runs-on: ubuntu-latest
+    environment: npm_pkg
+
+    steps:
+      # prerelease のような文字が含まれていたら失敗させる.
+      - name: Check name and tag_name
+        if: >-
+          ${{ contains(github.event.release.name, 'p') ||
+          contains(github.event.release.tag_name, 'p') ||
+          contains(github.event.release.name, '-') ||
+          contains(github.event.release.tag_name, '-') }}
+        run: |
+          echo 'name: ${{ github.event.release.name }}'
+          echo 'tag_name: ${{ github.event.release.tag_name }}'
+          exit 1
+
+      - uses: actions/checkout@v2
+
+      # npm に公開するように .npmrc ファイルを設定する
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      # https://docs.github.com/ja/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm キャッシュファイルは Linux/macOS の「~/.npm」に保存される
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+
+      # https://dev.classmethod.jp/articles/github-actions-npm-automatic-release/
+      # activity type を published へ変更したので念の為
+      - name: can-npm-publish
+        run: npx can-npm-publish
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

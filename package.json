@@ -1,7 +1,7 @@
 {
-  "name": "@hankei6km/gas-md2html",
-  "version": "0.1.0",
-  "description": "Google Apps Script library to convert Markdonw to HTML",
+  "name": "@hankei6km/my-starter-gas-lib-ts",
+  "version": "0.2.0",
+  "description": "My Starter to make Google Apps Script library by using TypeScript",
   "author": "hankei6km <hankei6km@gmail.com> (https://github.com/hankei6km)",
   "license": "MIT",
   "repository": {

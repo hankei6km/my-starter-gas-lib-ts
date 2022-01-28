@@ -35,7 +35,7 @@ jobs:
     # Release node に Types Changes 含むときだけ実行.
     if: >-
       ${{ github.event.release.prerelease ==  false }} &&
-      contains(${{ github.event.release.body, 'Types Changes' }})
+      contains(${{ github.event.release.body }}, 'Types Changes')
     runs-on: ubuntu-latest
     environment: npm_pkg
 

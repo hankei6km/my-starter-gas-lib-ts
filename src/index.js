@@ -1,8 +1,8 @@
 /**
- * gas-md2html
+ * my-starter-gas-lib-ts
  * @copyright (c) 2022 hankei6km
  * @license MIT
- * see "LICENSE.txt" "OPEN_SOURCE_LICENSES.txt" of "md2html.zip" in
+ * see "LICENSE.txt" "OPEN_SOURCE_LICENSES.txt" of "my-starter-gas-lib-ts.zip" in
  * releases(https://github.com/hankei6km/gas-md2html/releases)
  */
 

@@ -22,6 +22,12 @@ Googl Apps Script Library を TypeScript(clasp 利用)で作成するための�
 1. `package.json` の変更
     -  `config` の `NAMESPACE` と `BASENAME` を事前に決めた値へ変更
     - パッケージ名などの変更
+1. `src/index.js` のライセンスバナー
+    - タイトル
+    - `.zip` ファイル名
+1. `.github/workflows/deploy.yaml`
+    - `Make archilve file` ステップの `.zip` ファイル名
+    - `Upload archive file to release Asset` ステップの `.zip` ファイル名
 1. `LICENSE` 等を新しいライブラリーにあわせて変更(付録にテンプレート)
 
 

@@ -13,7 +13,14 @@ jobs:
         id: get
         run: >-
           echo "::set-output name=labels::$(
-          gh api graphql --jq .data.repository.release.descriptionHTML -F owner='${{ github.repository_owner }}' -F name="$(basename '${{ github.event.repository }}')" -F tag='${{ github.event.release.tag_name }}' -f query=' { repository(owner:$owner, name:$name) { release(tagName:$tag){ descriptionHTML } } }' 
+          gh api graphql --jq .data.repository.release.descriptionHTML -F owner='${{ github.repository_owner }}' -F name="$(basename '${{ github.event.repository }}')" -F tag='${{ github.event.release.tag_name }}' -f query='
+          query ($owner: String!, $name: String!, $tag_name: String!) {
+            repository(owner:$owner, name:$name) {
+              release(tagName:$tag_name){
+                descriptionHTML
+              }
+            }
+          }' 
           | npx --package=rehype-cli rehype -S --tree-out
           | jq -r 'map(..) | .[] | select(type=="object") | select(.tagName=="a") | .properties.href | select(contains("/pull/")) | split("/") | .[-1] '
           | sort | uniq
@@ -35,7 +42,7 @@ jobs:
     # Release node に Types Changes 含むときだけ実行.
     if: >-
       ${{ github.event.release.prerelease ==  false }} &&
-      contains(${{ github.event.release.body }}, 'Types Changes')
+      contains(${{ needs.labels_from_rel_note.outputs.labels }}, 'types')
     runs-on: ubuntu-latest
     environment: npm_pkg
 

@@ -41,8 +41,8 @@ jobs:
     needs: labels_from_rel_note
     # Release node に Types Changes 含むときだけ実行.
     if: >-
-      ${{ github.event.release.prerelease ==  false }} &&
-      contains(${{ needs.labels_from_rel_note.outputs.labels }}, 'types')
+      ${{ github.event.release.prerelease ==  false &&
+      contains(needs.labels_from_rel_note.outputs.labels, 'types') }}
     runs-on: ubuntu-latest
     environment: npm_pkg
 

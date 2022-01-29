@@ -9,7 +9,7 @@ jobs:
     outputs:
       labels: ${{ steps.get.outputs.labels }}
     steps:
-      - name: Get Labels from release note
+      - name: Collect Labels from release note
         id: get
         # REPOSITORY は OWNER と NAME に分割する.
         # jq のときは環境変数でないとアクセスできないので REPOSITORY を使う.

@@ -11,10 +11,6 @@
   "bugs": {
     "url": "https://github.com/hankei6km/gas-md2html/issues"
   },
-  "config": {
-    "namespace": "MD2html",
-    "basename": "md2html"
-  },
   "keywords": [
     "gas",
     "markdown",

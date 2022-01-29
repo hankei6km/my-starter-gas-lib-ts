@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-NAMESPACE="${npm_package_config_namespace}"
-BASENAME="${npm_package_config_basename}"
+NAMESPACE="MD2html"
+BASENAME="md2html"
 
 BUILD_DIR="build"
 # rollupjs でビルドされた結果(定義は "rollup.js" でされている).

@@ -1,7 +1,7 @@
 #!/bin\bash
 set -e
 
-BASENAME="${npm_package_config_basename}"
+BASENAME="md2html"
 
 # ビルドされたコードにテスト用のコードを結合する.
 # ビルドされたコードはエクスポートされていないための対応.

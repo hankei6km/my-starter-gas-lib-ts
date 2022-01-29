@@ -12,7 +12,7 @@ jobs:
       - name: Get Labels from release note
         id: get
         run: >-
-          echo "::set-output name=labels::$(
+          LABELS="$(
           gh api graphql --jq .data.repository.release.descriptionHTML -F owner='${{ github.repository_owner }}' -F name="$(basename '${{ github.repository }}')" -F tag_name='${{ github.event.release.tag_name }}' -f query='
           query ($owner: String!, $name: String!, $tag_name: String!) {
             repository(owner:$owner, name:$name) {
@@ -27,7 +27,11 @@ jobs:
           | while read -r PR ;
             do gh api "repos/${{ github.repository_owner }}/"$(basename '${{ github.repository }}')"/pulls/${PR}" --jq .labels[].name ;
           done | sort | uniq
-          )"
+          )" ;
+          LABELS="${LABELS//'%'/'%25'}" ;
+          LABELS="${LABELS//$'\n'/'%0A'}" ;
+          LABELS="${LABELS//$'\r'/'%0D'}" ;
+          echo "::set-output name=labels::${LABELS}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

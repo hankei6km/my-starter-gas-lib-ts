@@ -7,10 +7,10 @@ jobs:
   labels_from_rel_note:
     runs-on: ubuntu-latest
     outputs:
-      labels: ${{ steps.get.outputs.labels }}
+      labels: ${{ steps.collect.outputs.labels }}
     steps:
       - name: Collect Labels from release note
-        id: get
+        id: collect
         # REPOSITORY は OWNER と NAME に分割する.
         # jq のときは環境変数でないとアクセスできないので REPOSITORY を使う.
         # label の一覧は複数行になっているので set-output に収まるようにエンコードしている.

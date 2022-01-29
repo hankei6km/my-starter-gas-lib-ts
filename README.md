@@ -23,6 +23,8 @@ Googl Apps Script Library を TypeScript(clasp 利用)で作成するための�
     - パッケージ名などの変更
 1. `scripts/build.sh` の変更
     -  `NAMESPACE` と `BASENAME` を事前に決めた値へ変更
+1. `scripts/test-build.sh` の変更
+    -  `BASENAME` を事前に決めた値へ変更
 1. `src/index.js` のライセンスバナー
     - タイトルと `.zip` ファイル名を BASENAME にあわせる.
 1. `.github/workflows/deploy.yaml`

@@ -15,7 +15,7 @@ jobs:
           OWNER="$(cut -d '/' -f 1 <<< ${REPOSITORY})";
           NAME="$(cut -d '/' -f 2 <<< ${REPOSITORY})";
           LABELS="$(
-          gh api graphql --jq .data.repository.release.descriptionHTML -F owner="${OWNER}" -F name="${NAME}" -F tag_name='${{ github.event.release.tag_name }}' -f query='
+          gh api graphql --jq .data.repository.release.descriptionHTML -F owner="${OWNER}" -F name="${NAME}" -F tag_name="${TAG_NAME}" -f query='
           query ($owner: String!, $name: String!, $tag_name: String!) {
             repository(owner:$owner, name:$name) {
               release(tagName:$tag_name){
@@ -37,6 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
 
   print_labels:
     needs: labels_from_rel_note

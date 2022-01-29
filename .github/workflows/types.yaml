@@ -11,11 +11,13 @@ jobs:
     steps:
       - name: Get Labels from release note
         id: get
+        # REPOSITORY は OWNER と NAME に分割する.
+        # jq のときは環境変数でないとアクセスできないので REPOSITORY を使う.
         run: >-
           OWNER="$(cut -d '/' -f 1 <<< ${REPOSITORY})";
           NAME="$(cut -d '/' -f 2 <<< ${REPOSITORY})";
           LABELS="$(
-          gh api graphql --jq .data.repository.release.descriptionHTML -F owner="${OWNER}" -F name="${NAME}" -F tag_name='${{ github.event.release.tag_name }}' -f query='
+          gh api graphql --jq .data.repository.release.descriptionHTML -F owner="${OWNER}" -F name="${NAME}" -F tag_name="${TAG_NAME}" -f query='
           query ($owner: String!, $name: String!, $tag_name: String!) {
             repository(owner:$owner, name:$name) {
               release(tagName:$tag_name){
@@ -24,7 +26,7 @@ jobs:
             }
           }' 
           | npx --package=rehype-cli rehype -S --tree-out
-          | jq -r 'map(..) | .[] | select(type=="object") | select(.tagName=="a") | .properties.href | select(contains("/pull/")) | split("/") | .[-1] '
+          | jq -r 'map(..) | .[] | select(type=="object") | select(.tagName=="a") | .properties.href | select(contains("https://github.com/" + env.REPOSITORY + "/pull/")) | split("/") | .[-1] '\
           | sort | uniq
           | while read -r PR ;
             do gh api "repos/${OWNER}/${NAME}/pulls/${PR}" --jq .labels[].name ;
@@ -37,6 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
 
   print_labels:
     needs: labels_from_rel_note

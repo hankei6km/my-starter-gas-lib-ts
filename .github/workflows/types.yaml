@@ -13,9 +13,9 @@ jobs:
         id: collect
         uses: hankei6km/collect-labels-from-release-note@v0.2.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.repository }}
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          tag_name: ${{ github.event.release.tag_name }}
 
   print_labels:
     needs: labels_from_rel_note

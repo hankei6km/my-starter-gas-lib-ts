@@ -11,34 +11,8 @@ jobs:
     steps:
       - name: Collect Labels from release note
         id: collect
-        # REPOSITORY は OWNER と NAME に分割する.
-        # jq のときは環境変数でないとアクセスできないので REPOSITORY を使う.
-        # label の一覧は複数行になっているので set-output に収まるようにエンコードしている.
-        # https://github.community/t/set-output-truncates-multiline-strings/16852/3
-        run: >-
-          OWNER="$(cut -d '/' -f 1 <<< ${REPOSITORY})";
-          NAME="$(cut -d '/' -f 2 <<< ${REPOSITORY})";
-          LABELS="$(
-          gh api graphql --jq .data.repository.release.descriptionHTML -F owner="${OWNER}" -F name="${NAME}" -F tag_name="${TAG_NAME}" -f query='
-          query ($owner: String!, $name: String!, $tag_name: String!) {
-            repository(owner:$owner, name:$name) {
-              release(tagName:$tag_name){
-                descriptionHTML
-              }
-            }
-          }' 
-          | npx --package=rehype-cli rehype -S --tree-out
-          | jq -r 'map(..) | .[] | select(type=="object") | select(.tagName=="a") | .properties.href | select(contains("https://github.com/" + env.REPOSITORY + "/pull/")) | split("/") | .[-1] '\
-          | sort | uniq
-          | while read -r PR ;
-            do gh api "repos/${OWNER}/${NAME}/pulls/${PR}" --jq .labels[].name ;
-          done | sort | uniq
-          )" ;
-          LABELS="${LABELS//'%'/'%25'}" ;
-          LABELS="${LABELS//$'\n'/'%0A'}" ;
-          LABELS="${LABELS//$'\r'/'%0D'}" ;
-          echo "::set-output name=labels::${LABELS}"
-        env:
+        uses: hankei6km/collect-labels-from-release-note@v0.2.0
+        with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
           TAG_NAME: ${{ github.event.release.tag_name }}
@@ -47,14 +21,16 @@ jobs:
     needs: labels_from_rel_note
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ needs.labels_from_rel_note.outputs.labels }}"
+      - run: echo "${LABELS}"
+    env:
+      LABELS: ${{ toJson(needs.labels_from_rel_note.outputs.labels) }}
 
   publish_types_pkg:
     needs: labels_from_rel_note
     # Release node に Types Changes 含むときだけ実行.
     if: >-
       ${{ github.event.release.prerelease ==  false &&
-      contains(needs.labels_from_rel_note.outputs.labels, 'types') }}
+      contains(toJson(needs.labels_from_rel_note.outputs.labels), 'types') }}
     runs-on: ubuntu-latest
     environment: npm_pkg
 

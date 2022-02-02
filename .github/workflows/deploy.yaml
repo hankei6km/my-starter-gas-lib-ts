@@ -30,9 +30,12 @@ jobs:
           contains(github.event.release.name, '-') ||
           contains(github.event.release.tag_name, '-') }}
         run: |
-          echo 'name: ${{ github.event.release.name }}'
-          echo 'tag_name: ${{ github.event.release.tag_name }}'
+          echo "name: ${REL_NAME}"
+          echo "tag_name: ${TAG_NAME}"
           exit 1
+        env:
+          REL_NAME: ${{ github.event.release.name }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
 
       - uses: actions/checkout@v2
 
@@ -84,7 +87,9 @@ jobs:
 
       # version は自動採番にまかせる.
       - name: Deploy HEAD in gas project
-        run: npm run deploy -- --description "$(echo "${{ github.event.release.body }}" | head -n 1 | tr -d '\n')"
+        run: npm run deploy -- --description "$(echo "${BODY}" | head -n 1 | tr -d '\n')"
+        env:
+          BODY: ${{ github.event.release.body }}
 
       # 念のため実行.
       - name: Cleanup files for clasp

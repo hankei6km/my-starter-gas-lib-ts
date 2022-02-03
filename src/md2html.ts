@@ -5,7 +5,7 @@ import { gfm } from 'micromark-extension-gfm'
 import { gfmFromMarkdown } from 'mdast-util-gfm'
 import { raw } from 'hast-util-raw'
 import { sanitize } from 'hast-util-sanitize'
-import { toHtml } from 'hast-util-to-html'
+import { toHtml as hastToHtml } from 'hast-util-to-html'
 import { normalizeMarkdownSource } from './util.js'
 
 export namespace MD2html {
@@ -35,9 +35,9 @@ export namespace MD2html {
    * @param md - Markdown ソース. Array の場合は '\n' で join される.
    * @returns - HTML
    */
-  export function md2html(md: MarkdownSource) {
+  export function toHtml(md: MarkdownSource) {
     const hast = md2hast(normalizeMarkdownSource(md))
-    return toHtml(sanitize(hast), { allowDangerousHtml: true })
+    return hastToHtml(sanitize(hast), { allowDangerousHtml: true })
   }
 
   /**
@@ -46,8 +46,8 @@ export namespace MD2html {
    * @param md - Markdown ソース. Array の場合は '\n' で join される.
    * @returns - HTML
    */
-  export function md2html_unsafe(md: MarkdownSource) {
+  export function toHtml_unsafe(md: MarkdownSource) {
     const hast = md2hast(normalizeMarkdownSource(md))
-    return toHtml(hast, { allowDangerousHtml: true })
+    return hastToHtml(hast, { allowDangerousHtml: true })
   }
 }

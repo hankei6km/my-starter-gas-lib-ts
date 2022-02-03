@@ -1,43 +1,9 @@
-import {
-  md2html,
-  md2html_unsafe,
-  normalizeMarkdownSource
-} from '../src/md2html'
+import { MD2html } from '../src/md2html.js'
 
-describe('normalizeMarkdownSource()', () => {
-  it('should convert undefined to ""', () => {
-    expect(normalizeMarkdownSource()).toEqual('')
-  })
-  it('should convert string to string', () => {
-    expect(normalizeMarkdownSource('simple text')).toEqual('simple text')
-  })
-  it('should convert number to string', () => {
-    expect(normalizeMarkdownSource(10)).toEqual('10')
-  })
-  it('should convert single row to string', () => {
-    expect(normalizeMarkdownSource([['abc', 'efg', 123]])).toEqual(`abc
-efg
-123`)
-  })
-  it('should convert multiple rows to string', () => {
-    expect(
-      normalizeMarkdownSource([
-        ['abc', 'efg', 123],
-        ['ABC', 'EFG', 456]
-      ])
-    ).toEqual(`abc
-efg
-123
-ABC
-EFG
-456`)
-  })
-})
-
-describe('md2html()', () => {
+describe('MD2html.toHtml()', () => {
   it('should return html', () => {
     expect(
-      md2html(`# test1
+      MD2html.toHtml(`# test1
 test test
 `)
     ).toEqual(`<h1>test1</h1>
@@ -45,12 +11,12 @@ test test
   })
 
   it('should return blank', () => {
-    expect(md2html(``)).toEqual(``)
+    expect(MD2html.toHtml(``)).toEqual(``)
   })
 
   it('should sanitize html', () => {
     expect(
-      md2html(`# test1
+      MD2html.toHtml(`# test1
 
 <div>
 <p>paragraph</p>
@@ -68,15 +34,15 @@ test test
   })
 
   it('should joined html', () => {
-    expect(md2html([['# test1', 'paragraph']])).toEqual(`<h1>test1</h1>
+    expect(MD2html.toHtml([['# test1', 'paragraph']])).toEqual(`<h1>test1</h1>
 <p>paragraph</p>`)
   })
 })
 
-describe('md2html_unsafe()', () => {
+describe('MD2html.toHtml_unsafe()', () => {
   it('should not sanitize html', () => {
     expect(
-      md2html_unsafe(`# test1
+      MD2html.toHtml_unsafe(`# test1
 
 <div>
 <p>paragraph</p>
@@ -94,7 +60,8 @@ test test
   })
 
   it('should joined html', () => {
-    expect(md2html_unsafe([['# test1', 'paragraph']])).toEqual(`<h1>test1</h1>
+    expect(MD2html.toHtml_unsafe([['# test1', 'paragraph']]))
+      .toEqual(`<h1>test1</h1>
 <p>paragraph</p>`)
   })
 })

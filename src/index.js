@@ -20,7 +20,7 @@
  * @returns {string} HTML
  */
 function toHtml(md) {
-  return _entry_point_.toHtml(md)
+  return _entry_point_.MD2html.toHtml(md)
 }
 
 /**
@@ -30,5 +30,5 @@ function toHtml(md) {
  * @returns {string} HTML
  */
 function toHtml_unsafe(md) {
-  return _entry_point_.toHtml_unsafe(md)
+  return _entry_point_.MD2html.toHtml_unsafe(md)
 }

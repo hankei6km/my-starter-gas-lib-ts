@@ -1,4 +1,3 @@
-///<reference path="./index.js" />
 import { Root, Content } from 'hast'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toHast } from 'mdast-util-to-hast'
@@ -7,38 +6,48 @@ import { gfmFromMarkdown } from 'mdast-util-gfm'
 import { raw } from 'hast-util-raw'
 import { sanitize } from 'hast-util-sanitize'
 import { toHtml } from 'hast-util-to-html'
+import { normalizeMarkdownSource } from './util.js'
 
-// index.js の定義を参照する.
-// - 定義が分散しているのが面白くない
-// - Apps Script のエディターでは @typedef を認識しない
-// type MarkdownSource = string | number | (string | number)[][] | undefined
+export namespace MD2html {
+  /**
+   * Markdown ソース. Array の場合は '\n' で join される.
+   * @typedef {string|number|Array<Array<string|number>>|undefined} MarkdownSource
+   */
+  export type MarkdownSource =
+    | string
+    | number
+    | (string | number)[][]
+    | undefined
 
-function md2hast(md: string) {
-  const mdast = fromMarkdown(md, {
-    extensions: [gfm()],
-    mdastExtensions: [gfmFromMarkdown()]
-  })
-  return raw(
-    toHast(mdast, { allowDangerousHtml: true }) || ({} as Root | Content)
-  )
-}
-
-export function normalizeMarkdownSource(md?: MarkdownSource): string {
-  if (md) {
-    if (Array.isArray(md)) {
-      return md.map((r) => r.map((c) => `${c}`).join('\n')).join('\n')
-    }
-    return `${md}`
+  function md2hast(md: string) {
+    const mdast = fromMarkdown(md, {
+      extensions: [gfm()],
+      mdastExtensions: [gfmFromMarkdown()]
+    })
+    return raw(
+      toHast(mdast, { allowDangerousHtml: true }) || ({} as Root | Content)
+    )
   }
-  return ''
-}
 
-export function md2html(md: MarkdownSource) {
-  const hast = md2hast(normalizeMarkdownSource(md))
-  return toHtml(sanitize(hast), { allowDangerousHtml: true })
-}
+  /**
+   * Mardkdown を HTML へ変換.
+   *
+   * @param md - Markdown ソース. Array の場合は '\n' で join される.
+   * @returns - HTML
+   */
+  export function md2html(md: MarkdownSource) {
+    const hast = md2hast(normalizeMarkdownSource(md))
+    return toHtml(sanitize(hast), { allowDangerousHtml: true })
+  }
 
-export function md2html_unsafe(md: MarkdownSource) {
-  const hast = md2hast(normalizeMarkdownSource(md))
-  return toHtml(hast, { allowDangerousHtml: true })
+  /**
+   * Mardkdown を HTML へ変換(sanitize 無し).
+   *
+   * @param md - Markdown ソース. Array の場合は '\n' で join される.
+   * @returns - HTML
+   */
+  export function md2html_unsafe(md: MarkdownSource) {
+    const hast = md2hast(normalizeMarkdownSource(md))
+    return toHtml(hast, { allowDangerousHtml: true })
+  }
 }

@@ -51,7 +51,7 @@
     "@types/google-apps-script": "^1.0.44",
     "@types/jest": "^27.4.0",
     "jest": "^27.4.7",
-    "rimraf": "^3.0.2",
+    "rimraf": "^5.0.5",
     "rollup": "^2.64.0",
     "rollup-plugin-license": "^2.6.1",
     "ts-jest": "^27.1.3",

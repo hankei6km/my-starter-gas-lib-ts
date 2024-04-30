@@ -5,7 +5,7 @@ NAMESPACE="MD2html"
 BASENAME="md2html"
 
 BUILD_DIR="build"
-# rollupjs でビルドされた結果(定義は "rollup.js" でされている).
+# esbuild でビルドされた結果(定義は "esbuild.config.mjs" でされている).
 OUT_MAIN="${BUILD_DIR}/main.js"
 # 上記ファイルに結合して Apps Scpirt で参照できるようにするファイル.
 SRC_INDEX="src/index.js"
@@ -13,7 +13,8 @@ SRC_INDEX="src/index.js"
 # Apps Scipt へ push する用.
 # iife 形式でビルドする(Apps Scriptからは参照できない状態).
 # LICENSE の情報をまとめる.
-npx rollup --config
+node esbuild.config.mjs
+tsc --emitDeclarationOnly --declaration --project ./tsconfig.build.json
 # App Script で参照できるようにするファイルと結合.
 cat "${SRC_INDEX}" "${OUT_MAIN}" > "${BUILD_DIR}/${BASENAME}.js"
 
@@ -26,4 +27,4 @@ sed -e 's/^export \(declare namespace\)/\1/' -- "${BUILD_DIR}/src/${BASENAME}.d.
 rm "${BUILD_DIR}/src/${BASENAME}.d.ts"
 
 # 作業用ファイルなどを削除.
-npx rimraf "${OUT_MAIN}" "${BUILD_DIR}/src" "${BUILD_DIR}/test"
+rimraf "${OUT_MAIN}" "${BUILD_DIR}/src" "${BUILD_DIR}/test" "${BUILD_DIR}/src/main.js.map" 

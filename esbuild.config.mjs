@@ -13,6 +13,7 @@ const result = await esbuild.build({
   globalName: '_entry_point_',
   sourcemap: false,
   platform: 'node',
+  packages: 'bundle',
   metafile: true,
   target: 'ES2019',
   tsconfig: 'tsconfig.build.json',

@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@hankei6km/files-to-licenses": "^0.1.1",
-    "@types/google-apps-script": "^1.0.83",
+    "@types/google-apps-script": "^2.0.1",
     "@types/jest": "^30.0.0",
     "esbuild": "^0.25.0",
     "jest": "^30.0.0",

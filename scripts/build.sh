@@ -23,8 +23,8 @@ cp LICENSE "${BUILD_DIR}/LICENSE.txt"
 
 # 型定義を良くない方法で namespace にまとめる.
 # index.d.ts へ移動.
-# sed -e 's/^export \(declare namespace\)/\1/' -- "${BUILD_DIR}/src/${BASENAME}.d.ts" >"index.d.ts"
-cat <(echo "declare namespace ${NAMESPACE} {") "${BUILD_DIR}/src/${BASENAME}.d.ts" <(echo "}") >"index.d.ts"
+cat <(echo "declare namespace ${NAMESPACE} {") "${BUILD_DIR}/src/${BASENAME}.d.ts" <(echo "}") |
+    sed -e 's/^\(export declare \|export \)//' >"index.d.ts"
 rm "${BUILD_DIR}/src/${BASENAME}.d.ts"
 
 # 作業用ファイルなどを削除.

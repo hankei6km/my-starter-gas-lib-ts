@@ -6,10 +6,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/hankei6km/gas-md2html.git"
+    "url": "git+https://github.com/hankei6km/my-starter-gas-lib-ts.git"
   },
   "bugs": {
-    "url": "https://github.com/hankei6km/gas-md2html/issues"
+    "url": "https://github.com/hankei6km/my-starter-gas-lib-ts/issues"
   },
   "keywords": [
     "gas",

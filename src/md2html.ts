@@ -1,4 +1,4 @@
-import { Root, Content } from 'hast'
+import type { Root, Content } from 'hast'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toHast } from 'mdast-util-to-hast'
 import { gfm } from 'micromark-extension-gfm'
@@ -6,7 +6,7 @@ import { gfmFromMarkdown } from 'mdast-util-gfm'
 import { raw } from 'hast-util-raw'
 import { sanitize } from 'hast-util-sanitize'
 import { toHtml as hastToHtml } from 'hast-util-to-html'
-import { normalizeMarkdownSource } from './util.js'
+import { normalizeMarkdownSource } from './util.ts'
 
 //export namespace MD2html {
 /**

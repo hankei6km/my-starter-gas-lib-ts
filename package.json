@@ -26,12 +26,13 @@
     "setup:clasp": "bash scripts/setup-clasp.sh && bash scripts/setup-clasprc.sh",
     "cleanup:clasp": "bash scripts/cleanup-clasp.sh",
     "clean": "npm run clean:build && npm run clean:test",
-    "clean:build": "rimraf index.d.ts build/*",
-    "clean:test": "rimraf test/build/*.spec.js",
+    "clean:build": "rm -rf index.d.ts build/*",
+    "clean:test": "rm -rf test/build",
     "build": "npm run clean:build && bash scripts/build.sh",
     "push": "bash scripts/clasp-with-auth.sh push --force",
     "deploy": "bash scripts/clasp-with-auth.sh deploy",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "test": "node --experimental-test-module-mocks --experimental-strip-types --test",
+    "test:coverage": "npm run test -- --experimental-test-coverage",
     "test:build": "npm run clean:test && npm run build && bash scripts/test-build.sh && npm run test",
     "posttest:build": "npm run clean:test",
     "lint:type-check": "tsc --noEmit"
@@ -48,12 +49,8 @@
   "devDependencies": {
     "@hankei6km/files-to-licenses": "^0.1.1",
     "@types/google-apps-script": "^2.0.1",
-    "@types/jest": "^30.0.0",
+    "@types/node": "^26.0.1",
     "esbuild": "^0.28.0",
-    "jest": "^30.0.0",
-    "rimraf": "^6.0.0",
-    "ts-jest": "^29.1.2",
-    "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "typescript": "^6.0.3"
   }

@@ -1,4 +1,4 @@
-import * as MD2html from './md2html.js'
+import * as MD2html from './md2html.ts'
 export function normalizeMarkdownSource(md?: MD2html.MarkdownSource): string {
   if (md) {
     if (Array.isArray(md)) {

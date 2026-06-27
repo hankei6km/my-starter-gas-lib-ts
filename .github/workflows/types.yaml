@@ -3,6 +3,11 @@ on:
   release:
     types:
       - published
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
 jobs:
   labels_from_rel_note:
     runs-on: ubuntu-latest
@@ -54,19 +59,7 @@ jobs:
         with:
           node-version: '26.x'
           registry-url: 'https://registry.npmjs.org'
-
-      # https://docs.github.com/ja/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows
-      - name: Cache node modules
-        uses: actions/cache@v5
-        env:
-          cache-name: cache-node-modules
-        with:
-          # npm キャッシュファイルは Linux/macOS の「~/.npm」に保存される
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
+          package-manager-cache: false # never use caching in release builds
 
       # https://dev.classmethod.jp/articles/github-actions-npm-automatic-release/
       # activity type を published へ変更したので念の為
@@ -83,5 +76,3 @@ jobs:
         run: npm run build
 
       - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

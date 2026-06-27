@@ -12,7 +12,7 @@
     "declaration": true,
     "pretty": true,
     "newLine": "lf",
-    "rootDir": "src/",
+    "rootDir": "./",
     "outDir": "build",
     "esModuleInterop": true,
     "allowJs":true

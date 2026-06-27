@@ -16,15 +16,16 @@ SRC_INDEX="src/index.js"
 node esbuild.config.mjs
 tsc --emitDeclarationOnly --declaration --project ./tsconfig.build.json
 # App Script で参照できるようにするファイルと結合.
-cat "${SRC_INDEX}" "${OUT_MAIN}" > "${BUILD_DIR}/${BASENAME}.js"
+cat "${SRC_INDEX}" "${OUT_MAIN}" >"${BUILD_DIR}/${BASENAME}.js"
 
 # Assets に含める LICENSE ファイルをコピー.
 cp LICENSE "${BUILD_DIR}/LICENSE.txt"
 
-# 型定義から良くない方法で export を外す(モジュールにしないため)
+# 型定義を良くない方法で namespace にまとめる.
 # index.d.ts へ移動.
-sed -e 's/^export \(declare namespace\)/\1/' -- "${BUILD_DIR}/src/${BASENAME}.d.ts" > "index.d.ts"
+# sed -e 's/^export \(declare namespace\)/\1/' -- "${BUILD_DIR}/src/${BASENAME}.d.ts" >"index.d.ts"
+cat <(echo "declare namespace ${NAMESPACE} {") "${BUILD_DIR}/src/${BASENAME}.d.ts" <(echo "}") >"index.d.ts"
 rm "${BUILD_DIR}/src/${BASENAME}.d.ts"
 
 # 作業用ファイルなどを削除.
-rimraf "${OUT_MAIN}" "${BUILD_DIR}/src" "${BUILD_DIR}/test" "${BUILD_DIR}/src/main.js.map" 
+rimraf "${OUT_MAIN}" "${BUILD_DIR}/src" "${BUILD_DIR}/test" "${BUILD_DIR}/src/main.js.map"

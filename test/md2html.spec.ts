@@ -1,4 +1,4 @@
-import { MD2html } from '../src/md2html.js'
+import * as MD2html from '../src/md2html.js'
 
 describe('MD2html.toHtml()', () => {
   it('should return html', () => {

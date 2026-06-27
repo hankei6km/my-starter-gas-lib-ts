@@ -4,7 +4,7 @@
     "module": "ES2020",
     "lib": [ "ESNext" ],
     "types": [
-       "@types/jest",
+       "@types/node",
        "@types/google-apps-script",
     ],
     "strict": true,
@@ -15,7 +15,8 @@
     "rootDir": "./",
     "outDir": "build",
     "esModuleInterop": true,
-    "allowJs":true
+    "allowJs":true,
+    "rewriteRelativeImportExtensions": true
   },
   "exclude": ["node_modules", "src/**/*.test.ts"],
   "include": ["src/**/*.ts","test/**/*.ts"]

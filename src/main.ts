@@ -1,1 +1,1 @@
-export * as MD2html from './md2html.js' 
+export * as MD2html from './md2html.ts' 

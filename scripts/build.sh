@@ -28,4 +28,4 @@ cat <(echo "declare namespace ${NAMESPACE} {") "${BUILD_DIR}/src/${BASENAME}.d.t
 rm "${BUILD_DIR}/src/${BASENAME}.d.ts"
 
 # 作業用ファイルなどを削除.
-rimraf "${OUT_MAIN}" "${BUILD_DIR}/src" "${BUILD_DIR}/test" "${BUILD_DIR}/src/main.js.map"
+rm -rf "${OUT_MAIN}" "${BUILD_DIR}/src" "${BUILD_DIR}/test" "${BUILD_DIR}/src/main.js.map"

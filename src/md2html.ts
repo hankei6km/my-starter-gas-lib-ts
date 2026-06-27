@@ -1,4 +1,4 @@
-import type { Root, Content } from 'hast'
+import type { Root } from 'hast'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toHast } from 'mdast-util-to-hast'
 import { gfm } from 'micromark-extension-gfm'
@@ -25,7 +25,7 @@ function md2hast(md: string) {
     mdastExtensions: [gfmFromMarkdown()]
   })
   return raw(
-    toHast(mdast, { allowDangerousHtml: true }) || ({} as Root | Content)
+    toHast(mdast, { allowDangerousHtml: true }) || ({} as Root)
   )
 }
 
